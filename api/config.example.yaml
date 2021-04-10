@@ -1,0 +1,17 @@
+# database configuration
+db_user: 'root'
+db_host: 'localhost'
+db_password: ''
+db_name: ''
+db_connector: 'mysql+pymysql'
+db_port: '3306'
+
+secret_key: ''
+
+# Mail configuration
+mail_server: 'smtp.mailtrap.io'
+mail_username: ''
+mail_password: ''
+mail_port: 2525
+mail_use_tls: True
+mail_use_ssl: False
