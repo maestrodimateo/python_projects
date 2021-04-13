@@ -1,8 +1,8 @@
 from api.models.user import User
 from marshmallow import Schema, fields, validate, validates, validates_schema, ValidationError
-from api.utils import password_crypt
+from api.utils import password_crypt, check_password
 
-class UserSchema(Schema):
+class BaseUserSchema(Schema):
     class Meta:
         load_only = ('password', 'password_confirmation', 'id')
         dump_only = ('public_id',)
@@ -13,6 +13,9 @@ class UserSchema(Schema):
     public_id = fields.Str(required = True)
     picture = fields.Str()
     password = fields.Str(validate = validate.Length(min = 20), required = True)
+
+class UserSchema(BaseUserSchema):
+
     password_confirmation = fields.Str(required = True)
 
     @validates('username')
@@ -35,3 +38,18 @@ class UserSchema(Schema):
             raise ValidationError(error)
         
         data['password'] = password_crypt(data['password'])
+
+class UserLoginSchema(BaseUserSchema):
+
+    @validates_schema
+    def check_credentials(self, data, **kwarg):
+        
+        error = {}
+        error['credential_failed'] = "Email or password incorect"
+        user = User.query.filter_by( email = data['email'] ).first()
+        
+        if not user:
+            raise ValidationError(error)
+        
+        if not check_password(data['password'], user.password):
+            raise ValidationError(error)

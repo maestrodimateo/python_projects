@@ -1,5 +1,5 @@
 from flask import Blueprint, request, Response
-from api.schemas.userschema import UserSchema
+from api.schemas.userschema import UserSchema, UserLoginSchema
 from marshmallow import ValidationError
 from api.utils import validate_fields
 from api.models.user import User
@@ -10,6 +10,7 @@ user = Blueprint('user', __name__, url_prefix='/api/users')
 BAD_REQUEST = 400
 
 user_schema = UserSchema()
+user_login_schema = UserLoginSchema()
 
 @user.route('/signup', methods = ['POST'])
 def signup():
@@ -23,10 +24,13 @@ def signup():
     last_added = new_user.create()
     return {'message': 'User added with success', 'user': user_schema.dump(last_added)}
 
-@user.route('/login', methods = ['GET'])
+@user.route('/login', methods = ['POST'])
 def login():
     try:
-        fields = validate_fields(user_schema, request, partial= ('password_confirmation', 'username'))
+        fields = validate_fields(user_login_schema, request, partial= ('password_confirmation', 'username'))
     except ValidationError as err:
         return err.messages, BAD_REQUEST
+    
+    user = User.find_by_email(fields['email'])
+    return {'message': 'Welcome {}'.format(user.username), 'user': user_login_schema.dump(user)}
     
