@@ -6,6 +6,7 @@ db_name: ''
 db_connector: 'mysql+pymysql'
 db_port: '3306'
 
+# secret key for CSRF
 secret_key: ''
 
 # Mail configuration

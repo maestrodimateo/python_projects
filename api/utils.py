@@ -43,6 +43,9 @@ def serialise_token(email):
 def password_crypt(password):
     return bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
 
+def check_password(password: str, hashpw: str):
+    return bcrypt.checkpw(password.encode('utf-8'), hashpw.encode('utf-8'))
+
 def validate_fields(schemas, request, partial = False):
     user_fields = schemas.load(request.get_json(), partial = partial)
     return user_fields
