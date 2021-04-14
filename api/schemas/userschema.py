@@ -4,6 +4,7 @@ from api.utils import password_crypt, check_password
 
 class BaseUserSchema(Schema):
     class Meta:
+        
         load_only = ('password', 'password_confirmation', 'id')
         dump_only = ('public_id',)
     
@@ -20,13 +21,13 @@ class UserSchema(BaseUserSchema):
 
     @validates('username')
     def unique_username(self, value):
-        user = User.query.filter_by(username = value).first()
+        user = User.find_by_username(value)
         if user:
             raise ValidationError('Name already used')
     
     @validates('email')
     def unique_email(self, value):
-        user = User.query.filter_by(email = value).first()
+        user = User.find_by_email(value)
         if user:
             raise ValidationError('Email already used')
     
@@ -46,7 +47,7 @@ class UserLoginSchema(BaseUserSchema):
         
         error = {}
         error['credential_failed'] = "Email or password incorect"
-        user = User.query.filter_by( email = data['email'] ).first()
+        user = User.find_by_email(data['email'])
         
         if not user:
             raise ValidationError(error)

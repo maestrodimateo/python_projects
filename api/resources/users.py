@@ -1,7 +1,7 @@
 from flask import Blueprint, request, Response
 from api.schemas.userschema import UserSchema, UserLoginSchema
 from marshmallow import ValidationError
-from api.utils import validate_fields
+from api.utils import validate_fields, jwt_encode
 from api.models.user import User
 from api import db
 
@@ -32,5 +32,6 @@ def login():
         return err.messages, BAD_REQUEST
     
     user = User.find_by_email(fields['email'])
-    return {'message': 'Welcome {}'.format(user.username), 'user': user_login_schema.dump(user)}
-    
+    token = jwt_encode(user.public_id)
+
+    return {'message': 'Welcome {}'.format(user.username), 'user': user_login_schema.dump(user), 'token': token}

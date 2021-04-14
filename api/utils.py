@@ -1,8 +1,10 @@
-from flask import Flask
 from itsdangerous import URLSafeTimedSerializer
+import datetime
+from flask import Flask
+import pymysql
 import bcrypt
 import yaml
-import pymysql
+import jwt
 
 pymysql.install_as_MySQLdb()
 
@@ -49,3 +51,10 @@ def check_password(password: str, hashpw: str):
 def validate_fields(schemas, request, partial = False):
     user_fields = schemas.load(request.get_json(), partial = partial)
     return user_fields
+
+def jwt_encode(public_id: str) -> str:
+    return jwt.encode({
+        'public_id' : public_id, 
+        'exp' : datetime.datetime.utcnow() + datetime.timedelta(minutes = 30)}, 
+        conf['secret_key'], 
+        algorithm="HS256")

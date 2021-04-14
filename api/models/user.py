@@ -13,7 +13,7 @@ class User(db.Model):
     picture = db.Column(db.String(60))
 
     @classmethod
-    def find_by_name(cls, username: str) -> "User":
+    def find_by_username(cls, username: str) -> "User":
         return cls.query.filter_by(username = username).first()
     
     @classmethod
