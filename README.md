@@ -14,7 +14,7 @@
 
 1. User -> id (int), name (string, unique), email (string, unique), password (string), picture (string), public_id (string)
 2. Todo -> id (int), name (string), deadline, created_at
-3. Task -> id (int), name (string), done (bool), when (datetime)
+3. Task -> id (int), name (string), done (bool, default = false), when (datetime)
 
 ## Etapes à suivre
 

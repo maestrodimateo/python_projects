@@ -11,6 +11,7 @@ class User(db.Model):
     password = db.Column(db.String(255), nullable = False)
     public_id = db.Column(db.String(60), nullable = False, unique = True, default = uuid4())
     picture = db.Column(db.String(60))
+    todos = db.relationship('Todo', backref = "owner")
 
     @classmethod
     def find_by_username(cls, username: str) -> "User":

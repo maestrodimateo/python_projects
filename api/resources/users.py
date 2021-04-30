@@ -27,7 +27,7 @@ def signup():
 @user.route('/login', methods = ['POST'])
 def login():
     try:
-        fields = validate_fields(user_login_schema, request, partial= ('password_confirmation', 'username'))
+        fields = validate_fields(user_login_schema, request, partial = ('password_confirmation', 'username'))
     except ValidationError as err:
         return err.messages, BAD_REQUEST
     
