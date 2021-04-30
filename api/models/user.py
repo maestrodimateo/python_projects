@@ -9,7 +9,7 @@ class User(db.Model):
     username = db.Column(db.String(100), nullable = False, unique = True)
     email = db.Column(db.String(150), nullable = False, unique = True)
     password = db.Column(db.String(255), nullable = False)
-    public_id = db.Column(db.String(60), nullable = False, unique = True, default = uuid4())
+    public_id = db.Column(db.String(60), nullable = False, unique = True)
     picture = db.Column(db.String(60))
     todos = db.relationship('Todo', backref = "owner")
 
@@ -25,7 +25,9 @@ class User(db.Model):
     def find_by_email(cls, email: str) -> "User":
         return cls.query.filter_by(email = email).first()
     
-    def create(self) -> "User":
-        db.session.add(self)
+    @classmethod
+    def create(cls, fields: list) -> "User":
+        new_user = cls(**fields, public_id = uuid4().hex)
+        db.session.add(new_user)
         db.session.commit()
-        return self
+        return new_user

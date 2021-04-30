@@ -20,9 +20,8 @@ def signup():
         return err.messages, BAD_REQUEST
 
     fields.pop('password_confirmation')
-    new_user = User(**fields)
-    last_added = new_user.create()
-    return {'message': 'User added with success', 'user': user_schema.dump(last_added)}
+    new_user = User.create(fields)
+    return {'message': 'User added with success', 'user': user_schema.dump(new_user)}
 
 @user.route('/login', methods = ['POST'])
 def login():
